@@ -65,7 +65,6 @@ public class Controller implements Initializable {
     // list of all buttons on scene
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        timeline.setCycleCount(Timeline.INDEFINITE);
         buttonList.addAll(Arrays.asList(button0, button1, button2, button3, button4, button5, button6,
                 button7, button8, button9, button10, button11, button12, button13, button14, button15));
     }
@@ -104,7 +103,7 @@ public class Controller implements Initializable {
             }
             onSecondTurn = false;
             if (matchCounter == 8) {
-                text.setText("Match Won!");
+                text.setText("Match Won in " + this.counter.get() + " seconds!");
                 timeline.stop();
             }
         }
@@ -117,7 +116,10 @@ public class Controller implements Initializable {
 
     @FXML
     void start(ActionEvent event) {
-        timeline.getCurrentTime().equals(Duration.seconds(0));
+        // this.timeline.stop();
+        this.counter.set(0);
+        this.timeline.setCycleCount(Timeline.INDEFINITE);
+        this.timeline.play();
         Collections.shuffle(possibleButtons);
         for (int i = 0; i < this.boardSize; i++) {
             buttonList.get(i).setText(possibleButtons.get(i));
