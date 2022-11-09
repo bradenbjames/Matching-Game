@@ -38,7 +38,7 @@ public class Controller implements Initializable {
 
     Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.0), e -> {
         this.counter.set(counter.get() + 1);
-        this.timerLabel.setText("Timer: " + counter.getValue());
+        this.timerLabel.setText("Timer (seconds): " + counter.getValue());
     }));
 
     Random random = new Random();
