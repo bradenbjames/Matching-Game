@@ -1,3 +1,5 @@
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -27,6 +29,10 @@ public class Controller implements Initializable {
     @FXML
     private Label timerLabel;
 
+    // match feedback text
+    @FXML
+    private Text text;
+
     // keeping track of button emoji
     Stack<String> stack = new Stack<String>();
 
@@ -36,10 +42,13 @@ public class Controller implements Initializable {
     // list of all buttons
     ArrayList<Button> buttonList = new ArrayList<>();
 
-    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1.0), e -> {
+    Timeline timelineSeconds = new Timeline(new KeyFrame(Duration.seconds(1.0), e -> {
         this.counter.set(counter.get() + 1);
         this.timerLabel.setText("Timer (seconds): " + counter.getValue());
     }));
+
+    Timeline timelineBlink = new Timeline(new KeyFrame(Duration.seconds(0.5), evt -> text.setVisible(false)),
+            new KeyFrame(Duration.seconds(0.1), evt -> text.setVisible(true)));
 
     Random random = new Random();
 
@@ -48,10 +57,6 @@ public class Controller implements Initializable {
 
     // counts to 8, indicating all matches made
     private int matchCounter = 0;
-
-    // match feedback text
-    @FXML
-    private Text text;
 
     // emoji list
     ArrayList<String> possibleButtons = new ArrayList<>(
@@ -104,7 +109,9 @@ public class Controller implements Initializable {
             onSecondTurn = false;
             if (matchCounter == 8) {
                 text.setText("Match Won in " + this.counter.get() + " seconds!");
-                timeline.stop();
+                timelineBlink.setCycleCount(Animation.INDEFINITE);
+                timelineBlink.play();
+                timelineSeconds.stop();
             }
         }
     }
@@ -118,8 +125,8 @@ public class Controller implements Initializable {
     void start(ActionEvent event) {
         // this.timeline.stop();
         this.counter.set(0);
-        this.timeline.setCycleCount(Timeline.INDEFINITE);
-        this.timeline.play();
+        this.timelineSeconds.setCycleCount(Timeline.INDEFINITE);
+        this.timelineSeconds.play();
         Collections.shuffle(possibleButtons);
         for (int i = 0; i < this.boardSize; i++) {
             buttonList.get(i).setText(possibleButtons.get(i));
